@@ -1,0 +1,22 @@
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+
+engine=create_engine("postgresql://postgres:mithun2303@localhost/groovehub",echo=True)
+
+class SessionClass(object):
+    def __init__(self):
+        Session=sessionmaker(bind=engine)
+        self.instance=Session()
+
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(SessionClass, cls).__new__(cls)
+        return cls.instance
+    
+    def get_session(self):
+        return self.instance
+    
+Base=declarative_base()
+
+
