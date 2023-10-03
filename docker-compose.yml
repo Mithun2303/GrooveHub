@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./groovehub-bk
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./groovehub
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    networks:
+      - app-network
+
+  db:
+    image: postgres
+    ports:
+      - '5433:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mithun2303
+      - POSTGRES_DB=groovehub
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+
