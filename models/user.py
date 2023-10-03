@@ -6,4 +6,6 @@ class UserAuth(BaseModel):
     email:Optional[str]
     mobileNo:Optional[str]
     password:str
+    profilepic:Optional[str]
+    
     

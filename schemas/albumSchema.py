@@ -8,3 +8,4 @@ class AlbumSchema(Base):
     albumName = Column(String,nullable=False)
     description = Column(String,nullable=True)
     artistId = Column(String,ForeignKey(ArtistSchema.artistId))
+    albumfilloc = Column(String)

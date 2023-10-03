@@ -13,3 +13,6 @@ class InsertSong(BaseModel):
         self.artist_name= self.artist_name.upper()
         self.song_loc= self.song_loc.upper()
         self.genre = self.genre.upper()
+
+class Song(BaseModel):
+    songName: str

@@ -11,4 +11,5 @@ class UserSchema(Base):
     mobileNo = Column(String,nullable = True)
     spaceId = Column(String,ForeignKey(SpaceSchema.spaceId))
     password = Column(String,nullable=False)
+    profilepic = Column(String)
 
