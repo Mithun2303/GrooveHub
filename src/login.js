@@ -4,11 +4,15 @@ import logo from "./img/logo.png";
 import axios from "axios";
 import Gethost from "./host";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
   const [toggleValue, setValue] = useState(false);
+  let [errormessage,seterrrormessage] = useState("");
+  let [pwdcrct,setpwdcrct] = useState(false);
   const toggleSetValue = () => {
     setValue(!toggleValue);
   };
@@ -77,39 +81,56 @@ function Login() {
   const phoneNumberPattern = /\d/;
   const handleClick = (e) => {
     e.preventDefault();
-    if(usernamepattern.test(username)){
-      let obj = {
-        username:username,
-        password:password
-      };
-      window.alert(host+'/login');
-      axios.post(host+'/login',obj).then(
-        (res) => {
-          console.log(res.data);
-        }
-      )
-    }
-    else if (emailPattern.test(username))
+
+    
+  if (emailPattern.test(username))
     {
       let obj = {
         email:username,
         password:password
       }
-
-    }
-    else if (phoneNumberPattern.test(username))
-    {
-       let obj = {
-        username:username,
-        password:password
+      axios.post(host+'login',obj).then(
+        (res) => {
+          if(res.data.status_code == 300){
+            setpwdcrct(false);
+            seterrrormessage("Incorrect Password")
+          }
+          else{
+            setpwdcrct(true);
+            seterrrormessage("");
+            localStorage.setItem('temitopeuid',res.data.detail[1])
+            navigate('/');
+            
+          }
+          // store the jwt in the local storage and authenticate all the other pages
+        }
+        )
+        
       }
+      else if(usernamepattern.test(username)){
+        let obj = {
+          username:username,
+          password:password
+        };
+        axios.post(host+'login',obj).then(
+          (res) => {
+            if(res.data.status_code == 300){
+              setpwdcrct(false);
+              seterrrormessage("Incorrect Password")
+            }
+            else{
+              setpwdcrct(true);
+              seterrrormessage("");
+              localStorage.setItem('temitopeuid',res.data.detail[1])
+              navigate('/');
+              
+            }
+            // store the jwt in the local storage and authenticate all the other pages
+          }      )
     }
-
-    
-    
   };
   return (
-    <div className="login flex items-center justify-center h-screen">
+    <div className="login flex items-center justify-center h-screen w-screen bg-primary">
       <form action="" className="flex flex-col gap-8 items-center">
         <div className="flex">
           <img src={logo} alt="" className="w-[100px] " />
@@ -137,15 +158,17 @@ function Login() {
             <RenderEye />
           </span>
         </div>
-        <div className="hover:text-gray1 underline mx-1 text-primarytext ml-[40%] -top-10 relative">
+
+        <div className="hover:text-gray1 underline mx-1 text-primarytext ml-[45%] -top-8 relative">
           <Link to="/forgetpassword">Forget password?</Link>
         </div>
         <button
           className="bg-primarytext rounded-2xl w-[50%] p-4 -top-10 relative"
           onClick={(e)=>handleClick(e)}
-        >
+          >
           Submit
         </button>
+          {pwdcrct ? null : <span className="text-primarytext relative -top-10">{errormessage}</span>}
         <span className="text-gray1 -top-10 relative">
           Need an account?
           <Link

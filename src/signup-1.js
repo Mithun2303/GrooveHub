@@ -7,8 +7,9 @@ import axios from "axios";
 import Gethost from "./host";
 
 // import Signup2 from "./signup-2";
-function Signup1()
+function Signup1({onNext})
 {
+  
   const host = Gethost();
   const navigate = useNavigate();
   let [username,setusername ]= useState("");
@@ -19,7 +20,7 @@ function Signup1()
 
   function handleClick(e)
   {
-
+    if(username,email,phno){
     e.preventDefault();
     const params= {
       name:username
@@ -35,13 +36,19 @@ axios.get(host+"/checkuname",{params:params}).then(
         else{
           setuserfound(true);
           seterrrormessage("");
-          navigate(`/signup2/${username}/${email}/${phno}`)
+          localStorage.setItem('temitopeusername',username);
+          localStorage.setItem('temitopeemail',email);
+          localStorage.setItem('temitopephno',phno);
+          // navigate(`/signup2/${username}/${email}/${phno}`)
+          onNext(1);
         }
       }
     )
+    }
   }
+  
 return (
-    <div className="login flex items-center justify-center h-screen">
+    (<div className="login flex items-center justify-center h-screen w-screen bg-primary">
         <form action="" className="flex flex-col gap-8 items-center">
             <div className="flex">
             <img src={logo} alt="" className="w-[100px] " />
@@ -79,8 +86,8 @@ return (
         </span>
         </form>
 
-    </div>
-)
+    </div>)
+);
 }
 
 export default Signup1;

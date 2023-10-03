@@ -1,63 +1,19 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { React } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import logo from "./img/logo.png";
-import Gethost from "./host";
 import { useNavigate } from "react-router-dom";
-import { fetchToken } from "./auth";
+import Gethost from "./host";
 
-function Forgetpassword2() {
-  let res = fetchToken();
-  if (res) {
-    console.log("DFVFVFVDVDFVFDV");
-  }
+
+function Signup3() {
+  let host = Gethost();
   const navigate = useNavigate();
-  const host = Gethost();
-  const data = useParams();
-  const [password, setpassword] = useState("");
-  const [repassword, setrepassword] = useState("");
-  const [passwordmatch, setpasswordmatch] = useState(false);
-  const [errormessage, seterrormessage] = useState("");
   const [toggleValue, setValue] = useState(false);
   const toggleSetValue = () => {
     setValue(!toggleValue);
   };
-  function handleclick(e) {
-    e.preventDefault();
-    if (password === repassword) {
-      setpasswordmatch(true);
-      seterrormessage("");
-      if (password.length < 8) {
-        setpasswordmatch(false);
-        seterrormessage("Passwords must have minimum 8 charecters");
-      } else {
-        const aparams = {
-          email: data.mail,
-        };
-        const obj = {
-          password: password,
-        };
-        axios
-          .post(
-            host +
-              `changepassword?email=${localStorage.getItem(
-                "temitope"
-              )}&password=${password}`
-          )
-          .then((res) => {
-            if (res.data.status_code === 200) {
-              setpasswordmatch(false);
-              seterrormessage("Password changed successfully");
-              navigate("/login");
-            }
-          });
-      }
-    } else {
-      setpasswordmatch(false);
-      seterrormessage("Passwords must match.");
-    }
-  }
+
   const RenderEye = () => {
     if (toggleValue) {
       return (
@@ -117,21 +73,68 @@ function Forgetpassword2() {
       );
   };
 
+  let [password, setpassword] = useState('');
+  let [repassword, setrepassword] = useState('');
+  let [passwordmatch,setpasswordmatch] = useState(false);
+  let [errormessage,seterrormessage] = useState('');
+
+  function handleclick(e)
+  {
+    e.preventDefault();
+    if(password!==repassword)
+    {
+      setpasswordmatch(false);
+      seterrormessage("Passwords must match.");
+    }
+    else{
+      if(password.length<8)
+      {
+
+        setpasswordmatch(false);
+        seterrormessage("Password must have a minimum of 8 charecters.")
+      }
+      else{
+        handleauth();
+      }
+    }
+    
+  }
+
+  const handleauth = () => {
+    const username = localStorage.getItem('temitopeusername');
+    const email = localStorage.getItem('temitopeemail');
+    const phno = localStorage.getItem('temitopephno');
+
+    let obj = {
+      username:username,
+      email:email,
+      mobileNo:phno,
+      password:password
+    }
+
+    axios.post(host+"/register",obj).then(
+      (res)=>{
+        if(res.data.status_code === 200)
+        {
+          localStorage.clear();
+          navigate('/login');
+        }
+      }    
+    )
+  }
+
   return (
     <div className="login flex items-center justify-center h-screen w-screen bg-primary">
       <form action="" className="flex flex-col gap-8 items-center">
         <div className="flex">
           <img src={logo} alt="" className="w-[100px] " />
         </div>
-        <h1 className="text-primarytext text-3xl ">Enter your email.</h1>
         <div className="">
           <input
             type={toggleValue ? "text" : "password"}
             className="text-md  bg-gray1 rounded-2xl w-[274px] h-12 px-4 outline-none placeholder:text-lg  placeholder:text-black"
             placeholder="Enter password"
-            onChange={(e) => {
-              setpassword(e.target.value);
-            }}
+            onChange={(e)=>{setpassword(e.target.value);setpasswordmatch(true) }}
             required
           ></input>
           <span
@@ -145,31 +148,26 @@ function Forgetpassword2() {
           <input
             type={toggleValue ? "text" : "password"}
             className="text-md  bg-gray1 rounded-2xl w-[274px] h-12 px-4 outline-none placeholder:text-lg  placeholder:text-black"
-            placeholder="Enter password again"
-            onChange={(e) => {
-              setrepassword(e.target.value);
-            }}
+            placeholder="Re-enter password"
+            onChange={(e)=>{setrepassword(e.target.value);setpasswordmatch(true)}}
             required
           ></input>
           <span
             className="hover:cursor-pointer relative -top-12"
-            onClick={toggleSetValue}
-          >
+            onClick={toggleSetValue}>
             <RenderEye />
           </span>
         </div>
         <button
-          className="bg-primarytext rounded-2xl w-[50%] p-4"
-          onClick={(e) => handleclick(e)}
+          className="submit bg-primarytext rounded-2xl w-[50%] p-4"
+          onClick={handleclick}
         >
-          Submit
+          I'm in!
         </button>
-        {passwordmatch ? null : (
-          <span className="text-primarytext">{errormessage}</span>
-        )}
+      {passwordmatch? null: <span className="text-primarytext">{errormessage}</span>}
       </form>
     </div>
   );
 }
 
-export default Forgetpassword2;
+export default Signup3;

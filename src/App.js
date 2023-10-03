@@ -1,20 +1,25 @@
 import {BrowserRouter,Routes,Route} from "react-router-dom";
 import Login from "./login"
-import Signup1 from "./signup-1";
+import SignupForm from "./combinedSignup";
+import ForgetPasswordForm from "./combinedForgetPassword";
+import Dashboard from "./dashboard";
+import { RequireToken } from "./auth";
 import Signup2 from "./signup-2";
-import Forgetpassword1 from "./forgetpassword1";
-import Forgetpassword2 from "./forgetpassword2";
 function App() {
-
+  window.onload = () => {
+    localStorage.removeItem('temitope');
+  }
   return(
     <BrowserRouter>
     <Routes>
-      <Route path='/'element={<Login/>}/>
-      <Route path="/signup1" element={<Signup1/>}></Route>
-      <Route path='/signup2/:username/:email/:phno' element={<Signup2/>}></Route>
-      <Route path='/forgetpassword1' element={<Forgetpassword1/>}></Route>
-      <Route path='/forgetpassword2' element={<Forgetpassword2/>}></Route>
+      <Route path='/login'element={<Login/>}/>
+      {/* <Route path="/signup1" element={<Signup1/>}></Route> */}
+      {/* <Route path='/signup2/:username/:email/:phno' element={<Signup2/>}></Route> */}
 
+      <Route path='/signup' element={<SignupForm/>}></Route>
+      <Route path='/forgetpassword' element={<ForgetPasswordForm/>}></Route>
+      <Route path = '/' element={<Dashboard/>}/>
+      <Route path="/cur" element={<Signup2/>}></Route>
 
     </Routes>
     </BrowserRouter>
